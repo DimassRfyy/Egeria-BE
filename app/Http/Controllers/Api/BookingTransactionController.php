@@ -60,4 +60,23 @@ class BookingTransactionController extends Controller
             return response()->json(['message' => 'An error occurred', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function booking_details(Request $request) {
+        $validated = $request->validate([
+            'trx_id' => 'required|string|exists:booking_transactions,trx_id',
+            'email' => 'required|email',
+        ]);
+
+        $booking = BookingTransaction::where('trx_id', $request->trx_id)->where('email', $request->email)
+            ->with([
+                'transactionDetails.cosmetic',
+                'transactionDetails',
+            ])->first();
+
+        if(!$booking) {
+            return response()->json(['message' => 'Transaction not found'], 404);
+        }
+
+        return new BookingTransactionApiResource($booking);
+    }
 }

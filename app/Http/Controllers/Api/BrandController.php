@@ -20,7 +20,7 @@ class BrandController extends Controller
     }
 
     public function show(Brand $brand) {
-        $brand->load(['cosmetics','pupularCosmetics']);
+        $brand->load(['cosmetics','popularCosmetics']);
         $brand->loadCount(['cosmetics']);
 
         return new BrandApiResource($brand);

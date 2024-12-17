@@ -35,7 +35,8 @@ class BookingTransactionResource extends Resource
     }
 
     public static function updateTotals(Get $get, Set $set): void {
-        $selectedCosmetics = collect($get('transactionDetails'))->filter(fn($item) => !empty($item['cosmetic_id']) && !empty($item['quantity']));
+        $selectedCosmetics = collect($get('transactionDetails'))->filter(fn($item)
+        => !empty($item['cosmetic_id']) && !empty($item['quantity']));
 
         $prices = Cosmetic::find($selectedCosmetics->pluck('cosmetic_id'))->pluck('price', 'id');
         
@@ -43,14 +44,14 @@ class BookingTransactionResource extends Resource
             return $subTotal + ($prices[$item['cosmetic_id']] * $item['quantity']);
         }, 0);
 
-        $totalTaxAmount = round($subTotal * 0.11);
-        $totalAmount = round($subTotal + $totalTaxAmount);
-        $totalQuantity = $selectedCosmetics->sum('quantity');
+        $total_tax_amount = round($subTotal * 0.11);
+        $total_amount = round($subTotal + $total_tax_amount);
+        $total_quantity = $selectedCosmetics->sum('quantity');
 
-        $set('total_amount', number_format($totalAmount, 0, ',', '.'));
-        $set('total_tax_amount', number_format($totalTaxAmount, 0, ',', '.'));
+        $set('total_amount', number_format($total_amount, 0, ',', '.'));
+        $set('total_tax_amount', number_format($total_tax_amount, 0, ',', '.'));
         $set('sub_total_amount', number_format($subTotal, 0, ',', '.'));
-        $set('quantity', $totalQuantity);
+        $set('quantity', $total_quantity);
     }
 
     public static function form(Form $form): Form
@@ -106,22 +107,22 @@ class BookingTransactionResource extends Resource
                                 ->integer()
                                 ->prefix('Qty')
                                 ->label('Total Quantity')
-                                ->readOnly()
+                                // ->readOnly()
                                 ->default(1),
                                 Forms\Components\TextInput::make('sub_total_amount')
                                 ->prefix('IDR')
                                 ->numeric()
-                                ->readOnly()
+                                // ->readOnly()
                                 ->label('Sub Total Amount'),
                                 Forms\Components\TextInput::make('total_amount')
                                 ->numeric()
                                 ->prefix('IDR')
-                                ->readOnly()
+                                // ->readOnly()
                                 ->label('Total Amount'),
                                 Forms\Components\TextInput::make('total_tax_amount')
                                 ->numeric()
                                 ->prefix('IDR')
-                                ->readOnly()
+                                // ->readOnly()
                                 ->label('Total Tax (11%)'),
                             ]),
                         ]),
@@ -201,7 +202,7 @@ class BookingTransactionResource extends Resource
                     ->icon(function ($record) {
                         return $record->is_paid ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
                     })
-                    ->label('Paid')
+                    ->label('Paid?')
                     ->searchable(),
             ])
             ->filters([

@@ -54,7 +54,7 @@ class BookingTransactionController extends Controller
                 ]);
             }
             
-            return new BookingTransactionApiResource($bookingTransaction->load('transactionDetails'));
+            return new BookingTransactionApiResource($bookingTransaction->load(['transactionDetails.cosmetic','transactionDetails']));
 
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred', 'error' => $e->getMessage()], 500);

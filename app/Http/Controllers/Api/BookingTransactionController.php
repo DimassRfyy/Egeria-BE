@@ -71,6 +71,7 @@ class BookingTransactionController extends Controller
             ->with([
                 'transactionDetails.cosmetic',
                 'transactionDetails',
+                'transactionDetails.cosmetic.brand',
             ])->first();
 
         if(!$booking) {

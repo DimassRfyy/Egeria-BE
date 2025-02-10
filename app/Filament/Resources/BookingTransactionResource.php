@@ -199,6 +199,8 @@ class BookingTransactionResource extends Resource
                 Tables\Columns\TextColumn::make('sub_total_amount')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_paid')
+                    ->trueColor('success')
+                    ->falseColor('danger')
                     ->icon(function ($record) {
                         return $record->is_paid ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
                     })
